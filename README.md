@@ -1,4 +1,8 @@
-# co.unruly.control
+# AJ's control
+
+This is a fork of the co.unruly.control repo. I will probably redesign/rename various functions, but otherwise you should refer to the parent repo (or the readme below) for more information. 
+
+## co.unruly.control
 
 [![Build Status](https://travis-ci.org/unruly/control.svg?branch=master)](https://travis-ci.org/unruly/control)
 [![Release Version](https://img.shields.io/maven-central/v/co.unruly/control.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22co.unruly%22%20AND%20a%3A%22control%22)
