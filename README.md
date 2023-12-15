@@ -1,4 +1,8 @@
-# co.unruly.control
+# AJ's control
+
+This repo is for studying and documenting behavior, as well as updating and changing a few various parts
+
+## co.unruly.control
 
 [![Build Status](https://travis-ci.org/unruly/control.svg?branch=master)](https://travis-ci.org/unruly/control)
 [![Release Version](https://img.shields.io/maven-central/v/co.unruly/control.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22co.unruly%22%20AND%20a%3A%22control%22)
