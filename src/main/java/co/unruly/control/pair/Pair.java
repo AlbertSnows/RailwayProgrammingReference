@@ -3,6 +3,7 @@ package co.unruly.control.pair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -73,6 +74,20 @@ public record Pair<L, R>(L left, R right) {
      */
     public <T> T then(@NotNull BiFunction<L, R, T> function) {
         return function.apply(this.left, this.right);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) o;
+        return Objects.equals(left, pair.left) &&
+                Objects.equals(right, pair.right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
     }
 
     @Contract(pure = true)
