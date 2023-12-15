@@ -3,6 +3,7 @@ package co.unruly.control.pair;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -64,6 +65,21 @@ public record Triple<A, B, C>(A first, B second, C third) {
      */
     public <T> T then(@NotNull TriFunction<A, B, C, T> function) {
         return function.apply(first, second, third);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Triple<?, ?, ?> triple = (Triple<?, ?, ?>) o;
+        return Objects.equals(first, triple.first) &&
+                Objects.equals(second, triple.second) &&
+                Objects.equals(third, triple.third);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second, third);
     }
 
     @Contract(pure = true)
