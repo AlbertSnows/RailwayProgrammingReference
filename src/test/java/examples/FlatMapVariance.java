@@ -4,6 +4,8 @@ import co.unruly.control.result.Result;
 import co.unruly.control.result.TypeOf;
 import co.unruly.control.validation.Validator;
 import co.unruly.control.validation.Validators;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,18 +17,19 @@ import static co.unruly.control.result.Transformers.*;
 import static co.unruly.control.result.TypeOf.using;
 import static co.unruly.control.validation.Validators.rejectIf;
 
+@SuppressWarnings("unused")
 public class FlatMapVariance {
 
-    private static Validator<Integer, String> fizzbuzz = Validators.compose(
+    private static final Validator<Integer, String> fizzbuzz = Validators.compose(
         rejectIf(n -> n % 3 == 0, "fizz"),
         rejectIf(n -> n % 5 == 0, "buzz"));
 
-    private static Validator<String, String> under100 = Validators.compose(
+    private static final Validator<String, String> under100 = Validators.compose(
         rejectIf(s -> s.length() > 2, s -> s + " is too damn high")
     );
 
     public void canFlatmapErrorTypeOfStringIntoErrorTypeOfString() {
-        divideExactlyByTwo(3)
+        divideExactlyByTwo()
             .then(attempt(this::isPrime));
     }
 
@@ -64,13 +67,12 @@ public class FlatMapVariance {
 
     public void canFlatmapErrorTypeOfListOfStringIntoErrorTypeOfFailedValidation() {
         Result<Integer, List<String>> foo = listFactors(5)
-            .then(attempt((item) -> fizzbuzz.apply(item)));
+            .then(attempt(fizzbuzz));
     }
 
-    private Result<Integer, String> divideExactlyByTwo(int number) {
-        return number % 2 == 0
-            ? Result.success(number / 2)
-            : Result.failure(number + " is odd: cannot divide exactly by two");
+    @Contract(" -> new")
+    private @NotNull Result<Integer, String> divideExactlyByTwo() {
+        return Result.failure(3 + " is odd: cannot divide exactly by two");
     }
 
     private Result<Integer, String> isPrime(int number) {

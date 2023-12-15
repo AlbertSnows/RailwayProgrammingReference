@@ -11,6 +11,7 @@ import static co.unruly.control.HigherOrderFunctions.withIndices;
 import static co.unruly.control.HigherOrderFunctions.zip;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.junit.Assert.assertEquals;
 
 public class ZipTest {
 
@@ -20,8 +21,10 @@ public class ZipTest {
             Stream.of("hello", "goodbye"),
             Stream.of("world", "cruel world"))
         .collect(Collectors.toList());
-
-        assertThat(pairs, contains(Pair.of("hello", "world"), Pair.of("goodbye", "cruel world")));
+        var listPairs = List.of(
+                Pair.of("hello", "world"),
+                Pair.of("goodbye", "cruel world"));
+        assertEquals(listPairs, pairs);
     }
 
     @Test
@@ -50,7 +53,11 @@ public class ZipTest {
     public void buildsIndexedList() {
         List<Pair<Integer, String>> indexed = withIndices(Stream.of("zero", "one", "two", "three"))
         .collect(Collectors.toList());
-
-        assertThat(indexed, contains(Pair.of(0, "zero"), Pair.of(1, "one"), Pair.of(2, "two"), Pair.of(3, "three")));
+        var comparison = List.of(
+                Pair.of(0, "zero"),
+                Pair.of(1, "one"),
+                Pair.of(2, "two"),
+                Pair.of(3, "three"));
+        assertEquals(indexed, comparison);
     }
 }

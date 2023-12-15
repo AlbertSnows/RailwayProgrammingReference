@@ -9,7 +9,7 @@ import static co.unruly.control.result.Match.match;
 import static co.unruly.control.result.Match.matchValue;
 import static co.unruly.control.result.Recover.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class MatchTest {
 
@@ -19,10 +19,10 @@ public class MatchTest {
                 ifType(B.class, B::messageForB),
                 ifType(C.class, C::messageForC)
         ).otherwise(A::message);
-
-        assertThat(matchByType.apply(new A("Cheese")), is("Cheese"));
-        assertThat(matchByType.apply(new B("Ketchup")), is("I'm a B and I say Ketchup"));
-        assertThat(matchByType.apply(new C("Pickles")), is("I'm a C and I say Pickles"));
+        var bMatch = matchByType.apply(new B("Ketchup"));
+        assertTrue(is("Cheese").matches(matchByType.apply(new A("Cheese"))));
+        assertTrue(is("I'm a B and I say Ketchup").matches(bMatch));
+        assertTrue(is("I'm a C and I say Pickles").matches(matchByType.apply(new C("Pickles"))));
     }
 
     @Test
@@ -31,11 +31,11 @@ public class MatchTest {
                 ifEquals(4, x -> x + " sure looks like a 4 to me!"),
                 ifEquals(7, x -> x + " looks like one of them gosh-darned 7s?")
         ).otherwise(x -> "I have no idea what a " + x + " is though...");
-
-        assertThat(matchByType.apply(3), is("I have no idea what a 3 is though..."));
-        assertThat(matchByType.apply(4), is("4 sure looks like a 4 to me!"));
-        assertThat(matchByType.apply(6), is("I have no idea what a 6 is though..."));
-        assertThat(matchByType.apply(7), is("7 looks like one of them gosh-darned 7s?"));
+        var nineMatch = matchByType.apply(7);
+        assertTrue(is("I have no idea what a 3 is though...").matches(matchByType.apply(3)));
+        assertTrue(is("4 sure looks like a 4 to me!").matches(matchByType.apply(4)));
+        assertTrue(is("I have no idea what a 6 is though...").matches(matchByType.apply(6)));
+        assertTrue(is("7 looks like one of them gosh-darned 7s?").matches(nineMatch));
     }
 
     @Test
@@ -45,10 +45,10 @@ public class MatchTest {
                 ifIs(x -> x < 0, x -> x + " is one of those banker's negative number thingies")
         ).otherwise(x -> x + " is a regular, god-fearing number for god-fearing folks");
 
-        assertThat(matchByType.apply(2), is("2, well, that's one of those even numbers"));
-        assertThat(matchByType.apply(-6), is("-6, well, that's one of those even numbers"));
-        assertThat(matchByType.apply(3), is("3 is a regular, god-fearing number for god-fearing folks"));
-        assertThat(matchByType.apply(-9), is("-9 is one of those banker's negative number thingies"));
+        assertTrue(is("2, well, that's one of those even numbers").matches(matchByType.apply(2)));
+        assertTrue(is("-6, well, that's one of those even numbers").matches(matchByType.apply(-6)));
+        assertTrue(is("3 is a regular, god-fearing number for god-fearing folks").matches(matchByType.apply(3)));
+        assertTrue(is("-9 is one of those banker's negative number thingies").matches(matchByType.apply(-9)));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MatchTest {
                 ifIs(x -> x < 0, x -> x + " is one of those banker's negative number thingies")
         ).otherwise(x -> x + " is a regular, god-fearing number for god-fearing folks");
 
-        assertThat(matchByResult, is("4, well, that's one of those even numbers"));
+        assertTrue(is("4, well, that's one of those even numbers").matches(matchByResult));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class MatchTest {
                 ifPresent(Things::c)
         ).otherwise(__ -> "Ketchup!");
 
-        assertThat(cheese, is("Cheese!"));
+        assertTrue(is("Cheese!").matches(cheese));
     }
 
 
@@ -81,14 +81,14 @@ public class MatchTest {
                 ifPresent(Things::c)
         ).otherwise(__ -> "Ketchup!");
 
-        assertThat(cheese, is("Ketchup!"));
+        assertTrue(is("Ketchup!").matches(cheese));
     }
 
     @Test
     public void useMatchToCalculateFactorial() {
-        assertThat(factorial(0), is(1));
-        assertThat(factorial(1), is(1));
-        assertThat(factorial(6), is(720));
+        assertTrue(is(1).matches(factorial(0)));
+        assertTrue(is(1).matches(factorial(1)));
+        assertTrue(is(720).matches(factorial(6)));
     }
 
     @Test(expected = IllegalArgumentException.class)

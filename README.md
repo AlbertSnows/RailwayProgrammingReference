@@ -1,8 +1,4 @@
-# AJ's control
-
-This is a fork of the co.unruly.control repo. I will probably redesign/rename various functions, but otherwise you should refer to the parent repo (or the readme below) for more information. 
-
-## co.unruly.control
+# co.unruly.control
 
 [![Build Status](https://travis-ci.org/unruly/control.svg?branch=master)](https://travis-ci.org/unruly/control)
 [![Release Version](https://img.shields.io/maven-central/v/co.unruly/control.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22co.unruly%22%20AND%20a%3A%22control%22)
@@ -189,8 +185,12 @@ and failure types, and both functions must return the same type.
 `Result.then` takes a function from a `Result` to a value, and then applies
 that function to the result. The following lines of code are (other than generics inference issues) equivalent:
 ```java
-ifFailed(x -> "Hello World").apply(result);
-result.then(ifFailed(x -> "Hello World"));
+class example {
+    example() {
+        ifFailed(x -> "Hello World").apply(result);
+        result.then(ifFailed(x -> "Hello World"));
+    }
+}
 ```
 
 By structuring the API like this, instead of having a fixed set of methods available, we can
@@ -228,10 +228,14 @@ Piper<Integer> pipe = Piper.pipe(42);
 You can then chain functions on the pipe:
 
 ```java
-Piper.pipe(42)              // yields a Pipe containing 42
-     .then(x -> x + 10)     // yields a Pipe containing 52
-     .then(x -> x * 2)      // yields a Pipe containing 104
-     .resolve()             // returns 104
+class example {
+    example() {
+        Piper.pipe(42)              // yields a Pipe containing 42
+                .then(x -> x + 10)     // yields a Pipe containing 52
+                .then(x -> x * 2)      // yields a Pipe containing 104
+                .resolve();             // returns 104
+    }
+}
 ```
 
 This allows us to rewrite our failing-to-compile example from above as:

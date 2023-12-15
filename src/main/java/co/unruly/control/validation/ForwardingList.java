@@ -1,13 +1,24 @@
 package co.unruly.control.validation;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+/**
+ * @param <T> list type
+ *           here is a link to forward lists in C++
+ *           <a href="https://cplusplus.com/reference/forward_list/forward_list/">link</a>
+ *           It /should/ be the same principle
+ */
 public interface ForwardingList<T> extends List<T> {
 
+    /**
+     * @return delegate list
+     */
     List<T> delegate();
 
     default int size() {
@@ -22,15 +33,15 @@ public interface ForwardingList<T> extends List<T> {
         return delegate().contains(o);
     }
 
-    default Iterator<T> iterator() {
+    default @NotNull Iterator<T> iterator() {
         return delegate().iterator();
     }
 
-    default Object[] toArray() {
+    default Object @NotNull [] toArray() {
         return delegate().toArray();
     }
 
-    default <T1> T1[] toArray(T1[] a) {
+    default <T1> T1 @NotNull [] toArray(T1 @NotNull [] a) {
         return delegate().toArray(a);
     }
 
@@ -42,23 +53,23 @@ public interface ForwardingList<T> extends List<T> {
         return delegate().remove(o);
     }
 
-    default boolean containsAll(Collection<?> c) {
-        return delegate().containsAll(c);
+    default boolean containsAll(@NotNull Collection<?> c) {
+        return new HashSet<>(delegate()).containsAll(c);
     }
 
-    default boolean addAll(Collection<? extends T> c) {
+    default boolean addAll(@NotNull Collection<? extends T> c) {
         return delegate().addAll(c);
     }
 
-    default boolean addAll(int index, Collection<? extends T> c) {
+    default boolean addAll(int index, @NotNull Collection<? extends T> c) {
         return delegate().addAll(index, c);
     }
 
-    default boolean removeAll(Collection<?> c) {
+    default boolean removeAll(@NotNull Collection<?> c) {
         return delegate().removeAll(c);
     }
 
-    default boolean retainAll(Collection<?> c) {
+    default boolean retainAll(@NotNull Collection<?> c) {
         return delegate().retainAll(c);
     }
 
@@ -98,15 +109,15 @@ public interface ForwardingList<T> extends List<T> {
         return delegate().lastIndexOf(o);
     }
 
-    default ListIterator<T> listIterator() {
+    default @NotNull ListIterator<T> listIterator() {
         return delegate().listIterator();
     }
 
-    default ListIterator<T> listIterator(int index) {
+    default @NotNull ListIterator<T> listIterator(int index) {
         return delegate().listIterator(index);
     }
 
-    default List<T> subList(int fromIndex, int toIndex) {
+    default @NotNull List<T> subList(int fromIndex, int toIndex) {
         return delegate().subList(fromIndex, toIndex);
     }
 

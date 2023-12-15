@@ -10,10 +10,9 @@ import static co.unruly.control.result.Recover.ifType;
 import static co.unruly.control.result.Introducers.tryTo;
 import static co.unruly.control.result.Resolvers.ifFailed;
 import static co.unruly.control.result.Transformers.*;
-import static java.util.stream.Collectors.toList;
 
+@SuppressWarnings({"unused", "NewClassNamingConvention"})
 public class ExceptionsInStreamsHandling {
-
 
     @Test
     public void handling_exceptions_with_result_example() {
@@ -27,7 +26,7 @@ public class ExceptionsInStreamsHandling {
             })))
             .map(recover(ifType(IOException.class, error -> -2)))
             .map(ifFailed(__ -> -127))
-            .collect(toList());
+            .toList();
     }
 
     @Test
@@ -43,22 +42,22 @@ public class ExceptionsInStreamsHandling {
             })))
             .map(recover(ifType(IOException.class, error -> -2)))
             .map(ifFailed(__ -> -127))
-            .collect(toList());
+            .toList();
     }
 
 
     static class CustomerNotFound extends Exception {}
     static class NoCustomerWithThatName extends CustomerNotFound {}
 
-    public Customer findCustomerByName(String name) throws CustomerNotFound {
+    public Customer findCustomerByName(String name) {
         return customer;
     }
 
     private void sendEmailUpdateTo(Customer potentialCustomer) {
-        email(customer.emailAddress(), customer.name(),  "Blah blah blah");
+        email(customer.emailAddress(), customer.name());
     }
 
-    private void email(String email, String name, String message) {
+    private void email(String email, String name) {
 
     }
 
@@ -71,7 +70,7 @@ public class ExceptionsInStreamsHandling {
         default String name() { return ""; }
         default int age() { return 0; }
 
-        default int calculateValue() throws CostUnknown { return 0; }
+        default int calculateValue() { return 0; }
         class CostUnknown extends Exception {}
     }
 

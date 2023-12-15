@@ -1,5 +1,6 @@
 package co.unruly.control;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.function.Predicate;
@@ -7,6 +8,7 @@ import java.util.function.Predicate;
 import static co.unruly.control.ThrowingLambdas.ThrowingPredicate.throwingRuntime;
 import static org.junit.Assert.assertTrue;
 
+@SuppressWarnings("RedundantThrows")
 public class ThrowingLambdasTest {
 
 //    @Test
@@ -17,6 +19,7 @@ public class ThrowingLambdasTest {
     @Test
     public void canHandleThrowingMethodsWithAppropriateFunctionalInterfaceType() {
         assertTrue(tryToTest(2, ThrowingLambdasTest::dodgyIsEven));
+        assertTrue(tryToTest(4, ThrowingLambdasTest::dodgyIsEven));
     }
 
     @Test
@@ -32,9 +35,10 @@ public class ThrowingLambdasTest {
     @Test
     public void canConvertMultiThrowingLambdasToNonThrowingLambdas() throws Exception {
         assertTrue(test(2, throwingRuntime(ThrowingLambdasTest::veryDodgyIsEven)));
+        assertTrue(test(4, throwingRuntime(ThrowingLambdasTest::veryDodgyIsEven)));
     }
 
-    private static <T> boolean test(T item, Predicate<T> test) {
+    private static <T> boolean test(T item, @NotNull Predicate<T> test) {
         return test.test(item);
     }
 

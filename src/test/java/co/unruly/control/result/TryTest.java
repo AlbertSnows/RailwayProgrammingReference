@@ -1,5 +1,6 @@
 package co.unruly.control.result;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.List;
@@ -18,9 +19,6 @@ import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-
-//import static co.unruly.control.result.Results.ifFailed;
 
 public class TryTest {
 
@@ -79,14 +77,14 @@ public class TryTest {
         ));
     }
 
-    private static String throwsRuntimeException(String instruction) {
+    private static @NotNull String throwsRuntimeException(String instruction) {
         if("throw".equals(instruction)) {
             throw new RuntimeException("This is a naughty method");
         }
         return "Today, I was good";
     }
 
-    private static String throwsCheckedException(String instruction) throws CustomCheckedException {
+    private static @NotNull String throwsCheckedException(String instruction) throws CustomCheckedException {
         if("throw".equals(instruction)) {
             throw new CustomCheckedException("This is a naughty method");
         }
@@ -101,6 +99,7 @@ public class TryTest {
         return IntStream.range(1, Integer.parseInt(possiblyNumber) + 1).boxed();
     }
 
+    @SuppressWarnings("unused")
     static class CustomCheckedException extends Exception {
 
         public CustomCheckedException(String message) {

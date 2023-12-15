@@ -1,6 +1,8 @@
 package examples;
 
 import co.unruly.control.result.Result;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import static co.unruly.control.result.Resolvers.collapse;
 import static co.unruly.control.result.Result.failure;
@@ -9,9 +11,14 @@ import static co.unruly.control.result.Transformers.attempt;
 import static co.unruly.control.result.Transformers.onSuccess;
 import static java.lang.String.format;
 
+@SuppressWarnings("unused")
 public class NovelErrorHandling {
 
-    public static String novelSales(Author author, Publisher publisher, Editor editor, Retailer retailer) {
+    public static String
+    novelSales(@NotNull Author author,
+               @NotNull Publisher publisher,
+               @NotNull Editor editor,
+               @NotNull Retailer retailer) {
         return author.getIdea()
                 .then(attempt(publisher::getAdvance))
                 .then(attempt(author::writeNovel))
@@ -23,7 +30,7 @@ public class NovelErrorHandling {
     }
 
     public static class Author {
-        private Result<Idea, String> idea;
+        private final Result<Idea, String> idea;
         private final int skill;
         private final int lifestyleCosts;
 
@@ -37,7 +44,7 @@ public class NovelErrorHandling {
             return idea;
         }
 
-        public Result<Manuscript, String> writeNovel(Advance advance) {
+        public Result<Manuscript, String> writeNovel(@NotNull Advance advance) {
             if(advance.amount > lifestyleCosts) {
                 int happiness = advance.amount - lifestyleCosts;
                 return success(new Manuscript(advance.idea.title, happiness * skill));
@@ -47,31 +54,24 @@ public class NovelErrorHandling {
         }
     }
 
-    public static class Publisher {
+    public record Publisher(int qualityThreshold, int generosity) {
 
-        public final int qualityThreshold;
-        public final int generosity;
+        public Result<Advance, String> getAdvance(@NotNull Idea idea) {
+                if (idea.appeal >= qualityThreshold) {
+                    return success(new Advance(idea.appeal * generosity, idea));
+                } else {
+                    return failure("This novel wouldn't sell");
+                }
+            }
 
-        public Publisher(int qualityThreshold, int generosity) {
-            this.qualityThreshold = qualityThreshold;
-            this.generosity = generosity;
-        }
-
-        public Result<Advance, String> getAdvance(Idea idea) {
-            if(idea.appeal >= qualityThreshold) {
-                return success(new Advance(idea.appeal * generosity, idea));
-            } else {
-                return failure("This novel wouldn't sell");
+            @Contract("_ -> new")
+            public @NotNull Novel publishNovel(@NotNull Manuscript manuscript) {
+                return new Novel(manuscript.title, manuscript.quality);
             }
         }
 
-        public Novel publishNovel(Manuscript manuscript) {
-            return new Novel(manuscript.title, manuscript.quality);
-        }
-    }
-
     public static class Editor {
-        public Manuscript editNovel(Manuscript manuscript) {
+        public Manuscript editNovel(@NotNull Manuscript manuscript) {
             return new Manuscript(manuscript.title, manuscript.quality + 3);
         }
     }
@@ -88,44 +88,16 @@ public class NovelErrorHandling {
         }
     }
 
-    public static class Idea {
-        public final String title;
-        public final int appeal;
-
-        public Idea(String title, int appeal) {
-            this.title = title;
-            this.appeal = appeal;
-        }
+    public record Idea(String title, int appeal) {
     }
 
-    public static class Advance {
-        public final int amount;
-        public final Idea idea;
-
-        public Advance(int amount, Idea idea) {
-            this.amount = amount;
-            this.idea = idea;
-        }
+    public record Advance(int amount, Idea idea) {
     }
 
-    public static class Manuscript {
-        public final String title;
-        public final int quality;
-
-        public Manuscript(String title, int quality) {
-            this.title = title;
-            this.quality = quality;
-        }
+    public record Manuscript(String title, int quality) {
     }
 
-    public static class Novel {
-        public final String title;
-        public final int quality;
-
-        public Novel(String title, int quality) {
-            this.title = title;
-            this.quality = quality;
-        }
+    public record Novel(String title, int quality) {
     }
 
     public static class Sales {

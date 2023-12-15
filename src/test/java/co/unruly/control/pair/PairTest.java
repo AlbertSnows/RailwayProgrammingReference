@@ -54,15 +54,15 @@ public class PairTest {
         Pair<Integer[], String[]> parallelArrays = Stream.of(Pair.of(2, "hello"), Pair.of(4, "goodbye"))
                 .collect(toArrays(Integer[]::new, String[]::new));
 
-        assertThat(asList(parallelArrays.left), is(asList(2, 4)));
-        assertThat(asList(parallelArrays.right), is(asList("hello", "goodbye")));
+        assertThat(asList(parallelArrays.left()), is(asList(2, 4)));
+        assertThat(asList(parallelArrays.right()), is(asList("hello", "goodbye")));
     }
 
     @Test
     public void canReduceAStreamOfPairs() {
         Pair<Integer, String> reduced = Stream.of(Pair.of(2, "hello"), Pair.of(4, "goodbye"))
                 .collect(reducing(
-                        0, (x, y) -> x + y,
+                        0, Integer::sum,
                         "", String::concat
                 ));
 

@@ -6,7 +6,7 @@ import static co.unruly.control.Piper.pipe;
 import static co.unruly.control.matchers.ResultMatchers.isFailureOf;
 import static co.unruly.control.matchers.ResultMatchers.isSuccessOf;
 import static co.unruly.control.result.Introducers.castTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class CastsTest {
 
@@ -17,7 +17,7 @@ public class CastsTest {
         Result<String, Object> cast = pipe(helloWorld)
                 .resolveWith(castTo(String.class));
 
-        assertThat(cast, isSuccessOf("Hello World"));
+        assertTrue(isSuccessOf("Hello World").matches(cast));
     }
 
     @Test
@@ -27,6 +27,6 @@ public class CastsTest {
         Result<Integer, Object> cast = pipe(helloWorld)
                 .resolveWith(castTo(Integer.class));
 
-        assertThat(cast, isFailureOf("Hello World"));
+        assertTrue(isFailureOf("Hello World").matches(cast));
     }
 }

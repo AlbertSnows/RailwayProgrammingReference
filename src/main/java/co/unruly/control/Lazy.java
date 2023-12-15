@@ -8,15 +8,22 @@ import java.util.function.Supplier;
  * Will only calculate the value once.
  * @param <T> the type of object we're lazily instantiating
  */
+@SuppressWarnings({"unused", "optional", "OptionalUsedAsFieldOrParameterType"})
 public final class Lazy<T> {
 
     private final Supplier<T> source;
     private Optional<T> value = Optional.empty();
 
+    /**
+     * @param source .
+     */
     public Lazy(Supplier<T> source) {
         this.source = source;
     }
 
+    /**
+     * @return value, calculates it if it hasn't been calculated yet
+     */
     public synchronized T get() {
         return value.orElseGet(this::calculateAndStore);
     }

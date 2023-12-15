@@ -18,6 +18,10 @@ public class PairListCollector<L, R, FL, FR> implements Collector<Pair<L, R>, Pa
     private final Function<List<L>, FL> leftFinisher;
     private final Function<List<R>, FR> rightFinisher;
 
+    /**
+     * @param leftFinisher .
+     * @param rightFinisher .
+     */
     public PairListCollector(Function<List<L>, FL> leftFinisher, Function<List<R>, FR> rightFinisher) {
         this.leftFinisher = leftFinisher;
         this.rightFinisher = rightFinisher;
@@ -31,23 +35,23 @@ public class PairListCollector<L, R, FL, FR> implements Collector<Pair<L, R>, Pa
     @Override
     public BiConsumer<Pair<List<L>, List<R>>, Pair<L, R>> accumulator() {
         return (pairs, pair) -> {
-            pairs.left.add(pair.left);
-            pairs.right.add(pair.right);
+            pairs.left().add(pair.left());
+            pairs.right().add(pair.right());
         };
     }
 
     @Override
     public BinaryOperator<Pair<List<L>, List<R>>> combiner() {
         return (first, second) -> {
-            first.left.addAll(second.left);
-            first.right.addAll(second.right);
+            first.left().addAll(second.left());
+            first.right().addAll(second.right());
             return first;
         };
     }
 
     @Override
     public Function<Pair<List<L>, List<R>>, Pair<FL, FR>> finisher() {
-        return pair -> Pair.of(leftFinisher.apply(pair.left), rightFinisher.apply(pair.right));
+        return pair -> Pair.of(leftFinisher.apply(pair.left()), rightFinisher.apply(pair.right()));
     }
 
     @Override

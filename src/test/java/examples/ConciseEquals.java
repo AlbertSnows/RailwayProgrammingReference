@@ -8,6 +8,7 @@ import static co.unruly.control.casts.Equality.areEqual;
  * Just a demonstration of how we can build a cleaner way to check equality
  * using Result-based casts under the hood.
  */
+@SuppressWarnings("unused")
 public class ConciseEquals {
 
     private final int number;
@@ -30,7 +31,8 @@ public class ConciseEquals {
 
     @Override
     public boolean equals(Object o) {
-        return areEqual(this, o, (a, b) ->
+        return getClass() == o.getClass() &&
+                areEqual(this, o, (a, b) ->
             a.number == b.number &&
             Objects.equals(a.text, b.text)
         );

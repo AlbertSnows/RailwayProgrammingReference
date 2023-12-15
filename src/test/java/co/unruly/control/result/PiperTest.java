@@ -12,7 +12,7 @@ import static co.unruly.control.result.Recover.ifIs;
 import static co.unruly.control.result.Introducers.tryTo;
 import static co.unruly.control.result.Transformers.attempt;
 import static co.unruly.control.result.Transformers.onFailure;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PiperTest {
 
@@ -24,10 +24,10 @@ public class PiperTest {
                 .then(pattern::matcher)
                 .then(ifIs(Matcher::find, m -> m.group(1)))
                 .then(onFailure(__ -> "Could not find group to match"))
-                .then(attempt(tryTo(Integer::parseInt, ex -> ex.getMessage())))
+                .then(attempt(tryTo(Integer::parseInt, Throwable::getMessage)))
                 .resolve();
 
-        assertThat(result, isSuccessOf(1234));
+        assertTrue(isSuccessOf(1234).matches(result));
     }
 
     @Test
@@ -38,10 +38,10 @@ public class PiperTest {
                 .then(pattern::matcher)
                 .then(ifIs(Matcher::find, m -> m.group(1)))
                 .then(onFailure(__ -> "Could not find group to match"))
-                .then(attempt(tryTo(Integer::parseInt, ex -> ex.getMessage())))
+                .then(attempt(tryTo(Integer::parseInt, Throwable::getMessage)))
                 .resolve();
 
-        assertThat(result, isFailureOf("Could not find group to match"));
+        assertTrue(isFailureOf("Could not find group to match").matches(result));
     }
 
     @Test
@@ -55,6 +55,6 @@ public class PiperTest {
                 .then(attempt(tryTo(Integer::parseInt, ex -> "Parse failure: " + ex.getMessage())))
                 .resolve();
 
-        assertThat(result, isFailureOf("Parse failure: For input string: \"a\""));
+        assertTrue(isFailureOf("Parse failure: For input string: \"a\"").matches(result));
     }
 }
